@@ -1,5 +1,5 @@
 // List of ledarmöte
-import idList from './script/ledamöte.js';
+// import idList from './script/ledamöte.js';
 // console.log(idList);
 
 // Name of ledarmöte
@@ -16,25 +16,36 @@ async function persons() {
       const personsList = [];
       // console.log('Fetched Persons:', personsData);
       // Iterate over the idList and find matching persons
-      for (let i = 0; i < idList.length; i++) {
-        const id = idList[i];
-        const person = personsData.find(person => person.id === id.toString());
+
+      // for (let i = 0; i < idList.length; i++) {
+      //   const id = idList[i];
+      //   const person = personsData.find(person => person.id === id.toString());
+      //   if (person) {
+      //     personsList.push({ id: person.id, name: person.name });
+      //   } else {
+      //     personsList.push({ id: id, name: 'Namn saknas' });
+      //   }
+      // }
+
+      // console.log('Persons List:', personsList); // Log the final persons list
+  
+      for (let i = 0; i < personsData.length; i++) {
+        const id = personsData[i].id;
+        const person = personsData[i].name;
         if (person) {
-          personsList.push({ id: person.id, name: person.name });
+          personsList.push({ id: id, name: person });
         } else {
           personsList.push({ id: id, name: 'Namn saknas' });
         }
       }
-      // console.log('Persons List:', personsList); // Log the final persons list
-  
 
       // Attendance of ledarmöte
       const attendanceList = [];
       const aTypeData = []; // Create an array for aTypeData
       const tTypeData = []; // Create an array for tTypeData
       
-      for (let i = 0; i < idList.length; i++) {
-        const id = idList[i];
+      for (let i = 0; i < personsData.length; i++) {
+        const id = personsData[i].id;
         const link = `https://api.lagtinget.ax/api/persons/${id}/attendance.json`;
         const linkThemeSpeach = `https://api.lagtinget.ax/api/persons/${id}/theme_speeches.json`;
         const linkAType = "https://api.lagtinget.ax/api/presence_states.json";
@@ -61,11 +72,11 @@ async function persons() {
       
           const combinedData = {
             id: id,
-            name: personsList[i].name,
-            attendance: attendanceData,
-            aType: aTypeDataItem, // Assign the fetched data to the array
-            themeSpeaches: themeSpeechData,
-            tType: tTypeDataItem, // Assign the fetched data to the array
+            name: personsData[i].name,
+            attendance: attendanceData.length > 0 ? attendanceData : "None",
+            aType: aTypeDataItem.length > 0 ? aTypeDataItem : "None",
+            themeSpeaches: themeSpeechData.length > 0 ? themeSpeechData : "None",
+            tType: tTypeDataItem.length > 0 ? tTypeDataItem : "None",
           };
 
           attendanceList.push(combinedData);
@@ -101,20 +112,24 @@ async function persons() {
   
   row.appendChild(nameCell);
 
-  // Create and append Attendance cell
+// Create and append Attendance cell
 var attendanceCell = document.createElement("td");
 var attendanceContent = '';
 
-item.attendance[0].attendance.forEach(function (attendanceItem, index) {
-  attendanceContent += " Antal: " + attendanceItem.count;
+if (item.attendance && item.attendance[0] && item.attendance[0].attendance) {
+  item.attendance[0].attendance.forEach(function (attendanceItem, index) {
+    attendanceContent += " Antal: " + attendanceItem.count;
 
-  // Check if there is a corresponding aType item
-  if (item.aType[index]) {
-    attendanceContent += ", Typ: " + item.aType[index].title;
-  }
+    // Check if there is a corresponding aType item
+    if (item.aType && item.aType[index]) {
+      attendanceContent += ", Typ: " + item.aType[index].title;
+    }
 
-  attendanceContent += "<br>";
-});
+    attendanceContent += "<br>";
+  });
+} else {
+  attendanceContent = "None";
+}
 
 attendanceCell.innerHTML = attendanceContent;
 row.appendChild(attendanceCell);
@@ -123,19 +138,24 @@ row.appendChild(attendanceCell);
 var themeSpeechesCell = document.createElement("td");
 var themeSpeechParagraph = '';
 
-item.themeSpeaches[0].themes.forEach(function (themeItem, index) {
-  themeSpeechParagraph += "Antal: " + themeItem.count;
+if (item.themeSpeaches && item.themeSpeaches[0] && item.themeSpeaches[0].themes) {
+  item.themeSpeaches[0].themes.forEach(function (themeItem, index) {
+    themeSpeechParagraph += "Antal: " + themeItem.count;
 
-  // Check if there is a corresponding tType item
-  if (item.tType[index]) {
-    themeSpeechParagraph += ", Typ: " + item.tType[index].title;
-  }
+    // Check if there is a corresponding tType item
+    if (item.tType && item.tType[index]) {
+      themeSpeechParagraph += ", Typ: " + item.tType[index].title;
+    }
 
-  themeSpeechParagraph += "<br>";
-});
+    themeSpeechParagraph += "<br>";
+  });
+} else {
+  themeSpeechParagraph = "None";
+}
 
 themeSpeechesCell.innerHTML = themeSpeechParagraph;
 row.appendChild(themeSpeechesCell);
+
 
 // Append the row to the table body
 tableBody.appendChild(row);
@@ -143,6 +163,7 @@ tableBody.appendChild(row);
     // After data is fetched, hide loading animation and show the table
     document.getElementById("attendanceTable").style.display = "table";
     document.getElementById("loading").style.display = "none";
+
 
       });
 
@@ -152,6 +173,9 @@ tableBody.appendChild(row);
     }
   
 }
+
+
+
 
   persons();
 
