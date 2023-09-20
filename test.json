@@ -1,0 +1,79 @@
+[
+    {
+        "type": "156",
+        "count": "5",
+        "aTypeData": {
+            "id": "156",
+            "title": "Inte närvarande (pga lagtingsuppdrag)",
+            "parent": "164",
+            "description": "",
+            "color": "#F36A5A"
+        }
+    },
+    {
+        "type": "157",
+        "count": "2",
+        "aTypeData": {
+            "id": "157",
+            "title": "Oanmäld frånvaro",
+            "parent": "164",
+            "description": "",
+            "color": "#D91E18"
+        }
+    },
+    {
+        "type": "158",
+        "count": "1",
+        "aTypeData": {
+            "id": "158",
+            "title": "Inte närvarande (pga sjukdom)",
+            "parent": "164",
+            "description": "",
+            "color": "#D05454"
+        }
+    },
+    {
+        "type": "159",
+        "count": "5",
+        "aTypeData": {
+            "id": "159",
+            "title": "Försenad",
+            "parent": "154",
+            "description": "",
+            "color": "#36D7B7"
+        }
+    },
+    {
+        "type": "163",
+        "count": "220",
+        "aTypeData": {
+            "id": "163",
+            "title": "Från början",
+            "parent": "154",
+            "description": "",
+            "color": "#26C281"
+        }
+    },
+    {
+        "type": "344",
+        "count": "1",
+        "aTypeData": {
+            "id": "344",
+            "title": "Inte närvarande (pga privat angelägenhet)",
+            "parent": "164",
+            "description": null,
+            "color": "#800917"
+        }
+    },
+    {
+        "type": "350",
+        "count": "7",
+        "aTypeData": {
+            "id": "350",
+            "title": "Inte närvarande (pga annat förtroendeuppdrag)",
+            "parent": "164",
+            "description": null,
+            "color": "#FF5E71"
+        }
+    }
+]

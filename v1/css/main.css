@@ -1,0 +1,4 @@
+.blur-container {
+    filter: blur(5px); /* Adjust the blur amount as needed */
+    pointer-events: none; /* This prevents interactions with the blurred content */
+  }

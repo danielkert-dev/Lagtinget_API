@@ -1,0 +1,141 @@
+let attendanceChartInstance = null;
+let themeSpeechChartInstance = null;
+
+
+async function displayMoreData(id, name, image, dash) {
+    const dataContainer = document.getElementById("dataContainer");
+    dataContainer.classList.add("blur-container");
+    const headers = new Headers();
+    headers.append(
+      'User-Agent',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    );
+  
+    // Fetch additional data based on the provided ID
+    const link = `https://api.lagtinget.ax/api/persons/${id}/attendance.json`;
+    const linkThemeSpeach = `https://api.lagtinget.ax/api/persons/${id}/theme_speeches.json`;
+    const linkAType = "https://api.lagtinget.ax/api/presence_states.json";
+    const linkTType = "https://api.lagtinget.ax/api/themes.json";
+  
+    try {
+      const [attendanceResponse, themeSpeechResponse, aTypeResponse, tTypeResponse] = await Promise.all([
+        fetch(link, { headers }),
+        fetch(linkThemeSpeach, { headers }),
+        fetch(linkAType, { headers }),
+        fetch(linkTType, { headers }),
+      ]);
+  
+      const aTypeData = await aTypeResponse.json();
+      const tTypeData = await tTypeResponse.json();
+      const attendanceData = await attendanceResponse.json();
+      const themeSpeechData = await themeSpeechResponse.json();
+  
+  
+      // Check if the data is available and has the expected structure
+      if (attendanceData[0] && attendanceData[0].attendance) {
+        // // Destroy existing charts
+        // destroyChart(attendanceChartInstance);
+        // destroyChart(themeSpeechChartInstance);
+  
+        
+  
+        // Combine attendance and A-Type data
+        const combinedAttendanceA = attendanceData[0].attendance.map(item => ({
+          group: "Närvaro",
+          count: item.count,
+          title: aTypeData.find(aType => aType.id === item.type)?.title || 'Unknown',
+        }));
+  
+        // Combine theme speech data with T-Type data
+        const combinedThemeSpeechT = themeSpeechData[0].themes.map(item => ({
+          group: "Tema",
+          count: item.count,
+          title: tTypeData.find(tType => tType.id === item.theme)?.title || 'Unknown',
+        }));
+  
+        csvData = []
+        // Concatenate the attendance and theme speech data
+        csvData = csvData.concat(combinedThemeSpeechT, combinedAttendanceA);
+  
+        
+        // Calculate totalAttendance and totalThemeSpeech based on the data
+        const totalAttendance = combinedAttendanceA.reduce((acc, item) => acc + parseFloat(item.count), 0);
+        const totalThemeSpeech = combinedThemeSpeechT.reduce((acc, item) => acc + parseFloat(item.count), 0);
+  
+        console.log(totalAttendance, totalThemeSpeech);
+  
+  
+        // Calculate the percentage for each item
+        combinedAttendanceA.forEach(item => {
+          item.percentage = ((item.count / totalAttendance) * 100).toFixed(1);
+        });
+  
+        combinedThemeSpeechT.forEach(item => {
+          item.percentage = ((item.count / totalThemeSpeech) * 100).toFixed(1);
+        });
+  
+  
+  
+        populateTable('themeTable', combinedThemeSpeechT);
+        populateTable('attendanceTable', combinedAttendanceA);
+  
+      //   // Call the generateRandomColors function to get an array of random colors
+      //   const backgroundColorsA = generateRandomColors(combinedAttendanceA.length);
+      //   const backgroundColorsT = generateRandomColors(combinedThemeSpeechT.length);
+  
+      // // Render the charts with titles
+      // document.getElementById('attendanceChart').style.height = 'fit-content';
+      // document.getElementById('attendanceChart').style.minHeight = '15rem';
+      // document.getElementById('themeChart').style.height = 'fit-content';
+      // document.getElementById('themeChart').style.minHeight = '15rem';
+      // attendanceChartInstance = renderChart('attendanceChart', combinedAttendanceA, backgroundColorsA, 'Närvaro');
+      // themeSpeechChartInstance = renderChart('themeChart', combinedThemeSpeechT, backgroundColorsT, 'Tema');
+  
+      // Replace this line in your code
+// attendanceChartInstance = renderChart('attendanceChart', combinedAttendanceA, backgroundColorsA, 'Närvaro');
+
+// With this line
+        renderGoogleChart('attendanceChart', combinedAttendanceA, 'Närvaro', 's');
+        renderGoogleChart('themeChart', combinedThemeSpeechT, 'Tema', 's');
+
+  
+  
+        dataContainer.innerHTML = `
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-3">
+            <h3 class="p-3">${name}</h3>
+            <a href="https://www.lagtinget.ax/ledamoter/${dash}-${id}" class="mx-3 my-1 btn btn-primary btn-sm">Länk till person</a><br>
+            <button class="btn btn-sm btn-success mx-3 my-1" id="excel">.csv fil</button>
+            </div>
+            <img src="${image}" width="200" alt="${name}"  unselectable="on" class="m-3 img-fluid rounded shadow">
+          <div>
+        `;
+        setTimeout(() => {
+          dataContainer.classList.remove("blur-container");
+        }, 0);
+  
+  
+  const downloadButton = document.getElementById("excel");
+  downloadButton.className = 'btn btn-sm btn-success mx-3 my-1';
+  downloadButton.addEventListener('click', () => downloadCSV(name, image)); // Wrap the function call in an arrow function
+  document.querySelector('.col-md-3').appendChild(downloadButton);
+  
+      } else {
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+  
+
+  document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("nameButton")) {
+      const id = event.target.getAttribute("data-id");
+      const name = event.target.getAttribute("data-name");
+      const image = event.target.getAttribute("data-image");
+      const dash = event.target.getAttribute("data-dash");
+
+      displayMoreData(id, name, image, dash);
+    }
+  });
