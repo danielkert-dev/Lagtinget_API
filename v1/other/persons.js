@@ -51,6 +51,7 @@ async function persons() {
           attendanceList.push(combinedData);
           aTypeData.push(aTypeDataItem); // Push the fetched data into the array
           tTypeData.push(tTypeDataItem); // Push the fetched data into the array
+
         } catch (error) {
           console.error('Error:', error);
           throw error; // Propagate the error to the caller
@@ -58,7 +59,6 @@ async function persons() {
       }
       
         
-    console.log('Attendance List:', attendanceList); // Log the attendance list
 
   // Get the container element where person sections will be added
   var container = document.getElementById("personContainer");
@@ -135,6 +135,8 @@ async function persons() {
   document.getElementById("loading").style.display = "none";
   document.getElementById("personContainer").style.display = "block";
 
+  displayMoreData(personsData[0].id, personsData[0].name, personsData[0].image, "");
+
 
     } catch (error) {
       // Handle any errors that occurred during the fetch request
@@ -143,5 +145,3 @@ async function persons() {
   
 }
 
-
-export default persons;

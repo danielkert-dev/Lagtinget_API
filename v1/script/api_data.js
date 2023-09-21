@@ -48,14 +48,16 @@ async function displayMoreData(id, name, image, dash) {
   
         // Combine theme speech data with T-Type data
         const combinedThemeSpeechT = themeSpeechData[0].themes.map(item => ({
-          group: "Tema",
+          group: "Ämne",
           count: item.count,
           title: tTypeData.find(tType => tType.id === item.theme)?.title || 'Unknown',
         }));
   
-        csvData = []
+        csvData = [];
+        csvData1 = [];
         // Concatenate the attendance and theme speech data
-        csvData = csvData.concat(combinedThemeSpeechT, combinedAttendanceA);
+        csvData = combinedThemeSpeechT
+        csvData1 = combinedAttendanceA
   
         
         // Calculate totalAttendance and totalThemeSpeech based on the data
@@ -96,7 +98,7 @@ async function displayMoreData(id, name, image, dash) {
 
 // With this line
         renderGoogleChart('attendanceChart', combinedAttendanceA, 'Närvaro', 's');
-        renderGoogleChart('themeChart', combinedThemeSpeechT, 'Tema', 's');
+        renderGoogleChart('themeChart', combinedThemeSpeechT, 'Ämne', 's');
 
   
   
@@ -104,8 +106,17 @@ async function displayMoreData(id, name, image, dash) {
           <div class="row d-flex justify-content-center">
             <div class="col-md-3">
             <h3 class="p-3">${name}</h3>
+            <div class="row">
+            <div class="col-md-12">
             <a href="https://www.lagtinget.ax/ledamoter/${dash}-${id}" class="mx-3 my-1 btn btn-primary btn-sm">Länk till person</a><br>
-            <button class="btn btn-sm btn-success mx-3 my-1" id="excel">.csv fil</button>
+            </div>
+            <div class="col-md-12">
+            <button class="btn btn-sm btn-success mx-3 my-1" id="excel">Individ .csv fil</button>
+            </div>
+            <div class="col-md-12">
+            <button class="btn btn-sm btn-success mx-3 my-1" id="allexcel">All .csv fil</button>
+            </div>
+            </div>
             </div>
             <img src="${image}" width="200" alt="${name}"  unselectable="on" class="m-3 img-fluid rounded shadow">
           <div>
@@ -117,8 +128,11 @@ async function displayMoreData(id, name, image, dash) {
   
   const downloadButton = document.getElementById("excel");
   downloadButton.className = 'btn btn-sm btn-success mx-3 my-1';
-  downloadButton.addEventListener('click', () => downloadCSV(name, image)); // Wrap the function call in an arrow function
+  downloadButton.addEventListener('click', () => downloadCSV(name)); // Wrap the function call in an arrow function
   document.querySelector('.col-md-3').appendChild(downloadButton);
+
+  const allexcelButton = document.getElementById("allexcel");
+  allexcelButton.addEventListener('click', () => downloadAllCSV(name)); // Wrap the function call in an arrow function
   
       } else {
       }
@@ -126,9 +140,10 @@ async function displayMoreData(id, name, image, dash) {
       console.error('Error:', error);
       throw error;
     }
-  }
-  
 
+    
+    
+  }
   document.addEventListener("click", function (event) {
     if (event.target.classList.contains("nameButton")) {
       const id = event.target.getAttribute("data-id");
@@ -139,3 +154,4 @@ async function displayMoreData(id, name, image, dash) {
       displayMoreData(id, name, image, dash);
     }
   });
+
