@@ -116,7 +116,6 @@ async function allData() {
         const linkAType = "https://api.lagtinget.ax/api/presence_states.json";
         const linkTType = "https://api.lagtinget.ax/api/themes.json";
       
-        const combinedAttendanceList = [];
 
         try {
           const response = await fetch(link, { headers });
@@ -131,16 +130,11 @@ async function allData() {
           const responseTType = await fetch(linkTType, { headers });
           const tTypeDataItem = await responseTType.json(); // Use a different variable name
       
-
-          for (let j = 0; j < aTypeDataItem.length; j++) {
-            console.log(attendanceData[0].attendance[1].count);
-          }
           
           const combinedData = {
             id: id,
             name: personsData[i].name,
             attendance: attendanceData[0].attendance,
-            combinedAttendanceList: combinedAttendanceList,
             aType: aTypeDataItem, // You may want to filter this for the specific person
             themeSpeaches: themeSpeechData[0].themes,
             tType: tTypeDataItem, // You may want to filter this for the specific person

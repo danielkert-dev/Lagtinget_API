@@ -18,7 +18,6 @@ function convertToCSV(data, data1, name) {
     const valuesR1 = values1.replace(/,/g, '');
 
     const titleLength = data.length - 1;
-    console.log(titleLength);
     const titleSpace = ';'.repeat(Math.max(0, titleLength ));
 
     values.replace(',', '');
@@ -42,28 +41,46 @@ function downloadCSV(name) {
   function convertAllToCSV(data) {
     const csvStrings = [];
 
-    const titlesAmne = data[0].tType.map(titleData => titleData.title).join(';');
+    const titlesAmne = data[0].tType.map(titleData => titleData.title);
     const titlesAmneLength = data[0].tType.length;
-    const titleAmneSpace = ';'.repeat(Math.max(0, titlesAmneLength - 2 ));
-    const titlesNärvaro = data[0].aType.map(titleData => titleData.title).join(';');
+    const titleAmneSpace = ';'.repeat(Math.max(0, titlesAmneLength - 2));
+    const titlesNärvaro = data[0].aType.map(titleData => titleData.title);
+    const titlesNärvaroLength = data[0].aType.length;
 
-    const headerRow = `Name;Ämne;${titleAmneSpace};Närvaro\n`;
+    const headerRow = `Name;;Ämne${titleAmneSpace};;Närvaro\n`;
     csvStrings.push(headerRow);
 
-    const dataRow = `;${titlesAmne};${titlesNärvaro}\n`;
+    const dataRow = `;;${titlesAmne.join(';')};${titlesNärvaro.join(';')}\n`;
     csvStrings.push(dataRow);
 
     data.forEach(person => {
-        const name = person.name;
-
-        const amneCounts = person.attendance.map(amne => amne.count).join(';');
-        const themeCounts = person.themeSpeaches.map(theme => theme.count).join(';');
-
-        const row = `${name};${amneCounts};${themeCounts}\n`;
-        csvStrings.push(row);
-    });
-
-    return csvStrings;
+      const amneValuesA = []; // List for aType
+      const amneValuesT = []; // List for tType
+      const name = person.name;
+      
+      // Create a map of attendance types for faster lookup
+      const attendanceMap = new Map(person.attendance.map(item => [item.type, item.count]));
+  
+      // Create a map of themeSpeaches types for faster lookup
+      const themeSpeachesMap = new Map(person.themeSpeaches.map(item => [item.theme, item.count]));
+  
+      person.aType.forEach(type => {
+          const attendanceCount = attendanceMap.get(type.id);
+          amneValuesA.push(attendanceCount !== undefined ? attendanceCount : null);
+          //amneValuesT.push(null); // Add null for tType
+      });
+  
+      person.tType.forEach(type => {
+          const themeSpeachesCount = themeSpeachesMap.get(type.id);
+          amneValuesT.push(themeSpeachesCount !== undefined ? themeSpeachesCount : null);
+          //amneValuesA.push(null); // Add null for aType
+      });
+  
+      const amneRow = `${name};;${amneValuesT.join(';')}${amneValuesA.join(';')}\n`;
+      csvStrings.push(amneRow);
+  });
+  
+    return csvStrings.join('');
 }
 
 

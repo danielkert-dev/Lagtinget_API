@@ -104,7 +104,7 @@ async function displayMoreData(id, name, image, dash) {
   
         dataContainer.innerHTML = `
           <div class="row d-flex justify-content-center">
-            <div class="col-md-3">
+            <div class="col-sm-3">
             <h3 class="p-3">${name}</h3>
             <div class="row">
             <div class="col-md-12">
@@ -129,7 +129,7 @@ async function displayMoreData(id, name, image, dash) {
   const downloadButton = document.getElementById("excel");
   downloadButton.className = 'btn btn-sm btn-success mx-3 my-1';
   downloadButton.addEventListener('click', () => downloadCSV(name)); // Wrap the function call in an arrow function
-  document.querySelector('.col-md-3').appendChild(downloadButton);
+  document.querySelector('.col-sm-3').appendChild(downloadButton);
 
   const allexcelButton = document.getElementById("allexcel");
   allexcelButton.addEventListener('click', () => downloadAllCSV(name)); // Wrap the function call in an arrow function
