@@ -101,6 +101,10 @@ async function displayMoreData(id, name, image, dash) {
         renderGoogleChart('themeChart', combinedThemeSpeechT, 'Ämne', 's');
 
   
+        title.innerHTML = `
+        <h1>LEDARMÖTE LISTA</h1>
+        <button class="btn btn-sm btn-success mx-3 my-1" id="allexcel">Ledarmöte .csv fil</button>
+`;
   
         dataContainer.innerHTML = `
           <div class="row d-flex justify-content-center">
@@ -112,9 +116,6 @@ async function displayMoreData(id, name, image, dash) {
             </div>
             <div class="col-md-12">
             <button class="btn btn-sm btn-success mx-3 my-1" id="excel">Individ .csv fil</button>
-            </div>
-            <div class="col-md-12">
-            <button class="btn btn-sm btn-success mx-3 my-1" id="allexcel">All .csv fil</button>
             </div>
             </div>
             </div>
