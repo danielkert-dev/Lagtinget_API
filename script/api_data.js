@@ -87,7 +87,7 @@ async function displayMoreData(id, name, image, dash) {
 
       title.innerHTML = `
         <h1>LEDARMÖTE LISTA</h1>
-        <button class="btn btn-sm btn-success mx-3 my-1" id="allexcel">Ledarmöte .csv fil</button>
+        <button class="btn btn-sm btn-success mx-3 my-1" id="allexcel">Ledarmötet fil</button>
 `;
 
       dataContainer.innerHTML = `
@@ -99,7 +99,7 @@ async function displayMoreData(id, name, image, dash) {
             <a href="https://www.lagtinget.ax/ledamoter/${dash}-${id}" class="mx-3 my-1 btn btn-primary btn-sm">Länk till person</a><br>
             </div>
             <div class="col-md-12">
-            <button class="btn btn-sm btn-success mx-3 my-1" id="excel">Individ .csv fil</button>
+            <button class="btn btn-sm btn-success mx-3 my-1" id="excel">Individ fil - ${name}</button>
             </div>
             </div>
             </div>
