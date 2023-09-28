@@ -1,57 +1,60 @@
+<!--
+  Made by IT21 Ålands Yrkesgymnasium
+  Code: Daniel
+  Design: Maria
+  CSV Structure: Oliver
+  Extra: Teo
+-->
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Project</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/main.css">
-
-
 </head>
+
 <body>
   <div class="container mt-5">
     <h1 class="text-center m-5" id="title" style="color: #555555;">LEDARMÖTE LISTA</h1>
     <div class="row">
 
-    <div id="dataContainer"  class="bg-light rounded mb-5 w-100">
-      <p class="text-center text-muted p-3">Klicka på namn att få mer information</p>
+      <div id="dataContainer" class="bg-light rounded mb-5 w-100">
+        <p class="text-center text-muted p-3">Klicka på namn att få mer information</p>
+      </div>
     </div>
-    </div>
-
-    
 
     <div class="row mx-auto mb-5">
-      
+
       <div class="col-sm-2">
         <input type="text" id="searchInput" class="form-control mb-2 shadow w-100" placeholder="Sök...">
-      <div id="personContainer" lass=" ">
-        <div id="loading" class="text-center">
-          <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+        <div id="personContainer" lass=" ">
+          <div id="loading" class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <p>Det tar en stund</p>
           </div>
-          <p>Det tar en stund</p>
         </div>
       </div>
-      </div>
-
 
       <div class="col-sm-10 allData  ">
 
-
         <div class="row">
 
-        <div class="col-lg-5">
-          <div id="themeChart" >
-            <p class="text-center text-muted">Inga resultat</p>
+          <div class="col-lg-5">
+            <div id="themeChart">
+              <p class="text-center text-muted">Inga resultat</p>
+            </div>
           </div>
-        </div>
 
-        <div class="col-lg-5">
-          <div id="attendanceChart" >
-            <p class="text-center text-muted">Inga resultat</p>
+          <div class="col-lg-5">
+            <div id="attendanceChart">
+              <p class="text-center text-muted">Inga resultat</p>
+            </div>
           </div>
-        </div>
 
-        <div class="col-lg-5">
+          <div class="col-lg-5">
             <table class="table rounded bg-light">
               <thead>
                 <tr>
@@ -69,9 +72,7 @@
                 </td>
               </tbody>
             </table>
-        </div>
-
-
+          </div>
 
           <div class="col-lg-5">
             <table class="table rounded bg-light">
@@ -93,27 +94,27 @@
             </table>
           </div>
 
-
         </div>
       </div>
-      
     </div>
-
   </div>
 
-  
-  <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> # For chart.js-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-
-  <script src="script/persons.js"></script>
+  <!--Csv individ and ledarmöte-->
   <script src="script/csv_convert.js"></script>
+  <!--Table to display data of ämne and närvaro-->
   <script src="script/table.js"></script>
+  <!--Take the list data and display specific person-->
   <script src="script/api_data.js"></script>
+  <!--Search function for the list of persons-->
   <script src="script/search.js"></script>
+  <!--To list all the persons in ledarmöte-->
   <script src="script/list.js"></script>
+  <!--Show the data in a google chart-->
   <script type="text/javascript" src="script/data_chart.js"></script>
 
 
 </body>
+
 </html>
