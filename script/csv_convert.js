@@ -62,26 +62,68 @@ let csvData = [];
 let csvData1 = [];
 
 // Individual csv
-function convertToCSV(data, data1, name) {
-  const title = data.map((title) => Object.values(title.title)).join(";");
-  const titleR = title.replace(/,/g, "");
-  const values = data.map((values) => Object.values(values.count)).join(";");
-  const valuesR = values.replace(/,/g, "");
+function convertToCSV(data, individual) {
 
-  const title1 = data1.map((title) => Object.values(title.title)).join(";");
-  const titleR1 = title1.replace(/,/g, "");
-  const values1 = data1.map((values) => Object.values(values.count)).join(";");
-  const valuesR1 = values1.replace(/,/g, "");
+  const csvStrings = [];
 
-  const titleLength = data.length - 1;
-  const titleSpace = ";".repeat(Math.max(0, titleLength));
+  const titlesAmne = data[0].tType.map((titleData) => titleData.title);
+  const titlesAmneLength = data[0].tType.length;
+  const titleAmneSpace = ";".repeat(Math.max(0, titlesAmneLength - 2));
+  const titlesNärvaro = data[0].aType.map((titleData) => titleData.title);
+  const titlesNärvaroLength = data[0].aType.length;
 
-  values.replace(",", "");
-  return `Name;Ämne${titleSpace};Närvaro;\n;${titleR}${titleR1};\n${name};${valuesR};${valuesR1}`;
+  const headerRow = `Namn;;Ämne${titleAmneSpace};;Närvaro\n`;
+  csvStrings.push(headerRow);
+
+  const dataRow = `;;${titlesAmne.join(";")};${titlesNärvaro.join(";")}\n`;
+  csvStrings.push(dataRow);
+
+  data.forEach((person) => {
+    const amneValuesA = []; // List for aType
+    const amneValuesT = []; // List for tType
+    const name = person.name;
+
+    if (individual === name){
+
+
+    // Create a map of attendance types for faster lookup
+    const attendanceMap = new Map(
+      person.attendance.map((item) => [item.type, item.count])
+    );
+
+    // Create a map of themeSpeaches types for faster lookup
+    const themeSpeachesMap = new Map(
+      person.themeSpeaches.map((item) => [item.theme, item.count])
+    );
+
+    person.aType.forEach((type) => {
+      const attendanceCount = attendanceMap.get(type.id);
+      amneValuesA.push(attendanceCount !== undefined ? attendanceCount : null);
+      //amneValuesT.push(null); // Add null for tType
+    });
+
+    person.tType.forEach((type) => {
+      const themeSpeachesCount = themeSpeachesMap.get(type.id);
+      amneValuesT.push(
+        themeSpeachesCount !== undefined ? themeSpeachesCount : null
+      );
+      //amneValuesA.push(null); // Add null for aType
+    });
+
+    const amneRow = `${name};;${amneValuesT.join(";")};${amneValuesA.join(
+      ";"
+    )}\n`;
+    csvStrings.push(amneRow);
+  }
+  });
+
+  return csvStrings.join("");
 }
 
-function downloadCSV(name) {
-  const csvContent = convertToCSV(csvData, csvData1, name);
+async function downloadCSV(name) {
+  const data = await allData();
+
+  const csvContent = convertToCSV(data, name);
   const blob = new Blob(["\uFEFF" + csvContent], {
     type: "text/csv;charset=utf-8,",
   });
@@ -105,7 +147,7 @@ function convertAllToCSV(data) {
   const titlesNärvaro = data[0].aType.map((titleData) => titleData.title);
   const titlesNärvaroLength = data[0].aType.length;
 
-  const headerRow = `Name;;Ämne${titleAmneSpace};;Närvaro\n`;
+  const headerRow = `Namn;;Ämne${titleAmneSpace};;Närvaro\n`;
   csvStrings.push(headerRow);
 
   const dataRow = `;;${titlesAmne.join(";")};${titlesNärvaro.join(";")}\n`;
